@@ -1,0 +1,55 @@
+{
+  "name": "@masamin/scrape-financial-statements-from-yahoo-finance",
+  "description": "The scripts to scrape financial statements from Yahoo finance.",
+  "version": "0.1.0",
+  "author": "Masami Yonehara",
+  "bugs": {
+    "url": "https://github.com/hdemon/scrape-financial-statements-from-yahoo-finance/issues"
+  },
+  "dependencies": {
+    "@serverless-chrome/lambda": "^1.0.0-55",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.6.2",
+    "@types/puppeteer": "^1.12.4",
+    "@types/request": "^2.48.1",
+    "@types/request-promise": "^4.1.44",
+    "aws-sdk": "^2.492.0",
+    "axios": "^0.19.0",
+    "chrome-launcher": "^0.11.1",
+    "chrome-remote-interface": "^0.27.2",
+    "node-html-parser": "^1.1.16",
+    "puppeteer": "^1.18.1",
+    "request-promise": "^4.2.4",
+    "requset": "0.0.1-security",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-typescript": "^4.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.8.0",
+    "jsome": "^2.5.0",
+    "prettier": "1.18.2",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "typescript": "^3.5.3"
+  },
+  "homepage": "https://github.com/hdemon/scrape-financial-statements-from-yahoo-finance#readme",
+  "license": "MIT",
+  "main": "core/parser.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hdemon/scrape-financial-statements-from-yahoo-finance.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
+    "test": "jest",
+    "zip": "zip -r jaccs-scraper.zip ./*"
+  }
+}
