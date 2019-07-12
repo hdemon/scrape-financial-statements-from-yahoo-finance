@@ -33,7 +33,7 @@ exports.execute = async () => {
   let slsChrome: any
   let browser: any
   let page: any
-  let result = []
+  let result: any = []
 
   try {
     slsChrome = await launchChrome({
@@ -48,27 +48,56 @@ exports.execute = async () => {
     })
 
     page = await browser.newPage()
-    await page.goto('https://finance.yahoo.com/industries')
+    await page.goto('https://finance.yahoo.com/industries', {
+      waitUntil: 'domcontentloaded',
+    })
+    await page.waitForSelector('#YDC-SecondaryNav ul li a')
 
-    const categoryPaths = await page.evaluate(() => {
+    const categoryPaths: string[] = await page.evaluate(() => {
       return Array.from(
         document.querySelectorAll('#YDC-SecondaryNav ul li a')
       ).map((element: any) => element.href)
     })
 
-    categoryPaths.map(async path => {
-      const html = await page.goto(`https://finance.yahoo.com/${path}`)
-      const symbols = await page.evaluate(() => {
-        return Array.from(
-          document.querySelectorAll('#fin-scr-res-table tr a')
-        ).map((element: any) => element.innerHTML)
-      })
+    await page.waitFor(5000) // 1秒待つ
+    let getSymbolsPromise: any[] = []
+    categoryPaths.forEach(path => {
+      getSymbolsPromise.push(async () => {
+        const page = await browser.newPage()
+        const html = await page.goto(path, { waitUntil: 'domcontentloaded' })
 
-      result.push(symbols)
+        await page.waitForSelector('#fin-scr-res-table tr a')
+
+        const symbols = await page.evaluate(() => {
+          return Array.from(
+            document.querySelectorAll('#fin-scr-res-table tr a')
+          ).map((element: any) => element.innerHTML)
+        })
+        result = [result, ...symbols]
+        // await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+        await page.close()
+      })
     })
+
+    await page.close()
+    await getSymbolsPromise.reduce(
+      (prev, current) => prev.then(current),
+      Promise.resolve()
+    )
+
+    if (browser) {
+      await browser.disconnect()
+    }
+
+    if (slsChrome) {
+      await slsChrome.kill()
+    }
+
+    console.log(result)
+    return result
   } catch (e) {
     console.error(e)
-    return e
+    process.exit(1)
   } finally {
     if (page) {
       await page.close()
